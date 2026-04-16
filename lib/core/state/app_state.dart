@@ -7,7 +7,7 @@ class Success<T> extends AppState<T> {
   Success(this.data);
 }
 
-class Error<T> extends AppState<T> {
+class ErrorState<T> extends AppState<T> {
   final String message;
-  Error(this.message);
+  ErrorState(this.message);
 }

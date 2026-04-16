@@ -28,7 +28,7 @@ class ProductPage extends StatelessWidget {
                   );
                 },
               ),
-            Error(:final message) => Center(
+            ErrorState(:final message) => Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
