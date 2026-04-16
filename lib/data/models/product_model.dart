@@ -15,8 +15,17 @@ class ProductModel {
     return ProductModel(
       id: json["id"],
       title: json["title"],
-      price: json["price"].toDouble(),
+      price: (json["price"] as num).toDouble(),
       image: json["image"],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "title": title,
+      "price": price,
+      "image": image,
+    };
   }
 }

@@ -1,16 +1,25 @@
 import 'package:flutter/foundation.dart';
+import '../../core/state/app_state.dart';
 import '../../domain/entities/product.dart';
 import '../../domain/repositories/product_repository.dart';
 
 class ProductViewModel {
   final ProductRepository repository;
 
-  final ValueNotifier<List<Product>> products = ValueNotifier([]);
+  final ValueNotifier<AppState<List<Product>>> products =
+      ValueNotifier(Loading());
 
-  ProductViewModel(this.repository);
+  ProductViewModel(this.repository) {
+    loadProducts();
+  }
 
   Future<void> loadProducts() async {
-    final result = await repository.getProducts();
-    products.value = result;
+    products.value = Loading();
+    try {
+      final result = await repository.getProducts();
+      products.value = Success(result);
+    } on Exception catch (e) {
+      products.value = Error(e.toString());
+    }
   }
 }

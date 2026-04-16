@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/state/app_state.dart';
 import '../../domain/entities/product.dart';
 import '../viewmodels/product_viewmodel.dart';
 
@@ -11,25 +12,41 @@ class ProductPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Products")),
-      body: ValueListenableBuilder<List<Product>>(
+      body: ValueListenableBuilder<AppState<List<Product>>>(
         valueListenable: viewModel.products,
-        builder: (context, products, _) {
-          return ListView.builder(
-            itemCount: products.length,
-            itemBuilder: (context, index) {
-              final product = products[index];
-              return ListTile(
-                leading: Image.network(product.image),
-                title: Text(product.title),
-                subtitle: Text("\$${product.price}"),
-              );
-            },
-          );
+        builder: (context, state, _) {
+          return switch (state) {
+            Loading() => const Center(child: CircularProgressIndicator()),
+            Success(:final data) => ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  final product = data[index];
+                  return ListTile(
+                    leading: Image.network(product.image),
+                    title: Text(product.title),
+                    subtitle: Text("\$${product.price}"),
+                  );
+                },
+              ),
+            Error(:final message) => Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(message),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: viewModel.loadProducts,
+                      child: const Text("Tentar novamente"),
+                    ),
+                  ],
+                ),
+              ),
+          };
         },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: viewModel.loadProducts,
-        child: const Icon(Icons.download),
+        child: const Icon(Icons.refresh),
       ),
     );
   }
