@@ -2,13 +2,15 @@ class ProductModel {
   final int id;
   final String title;
   final double price;
-  final String image;
+  final String thumbnail;
+  final String description;
 
   ProductModel({
     required this.id,
     required this.title,
     required this.price,
-    required this.image,
+    required this.thumbnail,
+    required this.description,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -16,7 +18,8 @@ class ProductModel {
       id: json["id"],
       title: json["title"],
       price: (json["price"] as num).toDouble(),
-      image: json["image"],
+      thumbnail: json["thumbnail"] ?? '',
+      description: json["description"] ?? '',
     );
   }
 
@@ -25,7 +28,8 @@ class ProductModel {
       "id": id,
       "title": title,
       "price": price,
-      "image": image,
+      "thumbnail": thumbnail,
+      "description": description,
     };
   }
 }

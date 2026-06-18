@@ -26,10 +26,23 @@ class ProductRepositoryImpl implements ProductRepository {
     }
   }
 
+  @override
+  Future<Product> getProductById(int id) async {
+    try {
+      final model = await remoteDatasource.getProductById(id);
+      return _toEntity(model);
+    } on Failure {
+      rethrow;
+    } on Exception {
+      throw Failure('Erro ao carregar produto.');
+    }
+  }
+
   Product _toEntity(ProductModel m) => Product(
         id: m.id,
         title: m.title,
         price: m.price,
-        image: m.image,
+        image: m.thumbnail,
+        description: m.description,
       );
 }
